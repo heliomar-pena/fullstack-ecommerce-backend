@@ -72,12 +72,16 @@ To improve this and keep a good code quality, we could consider including husky 
 
 ### Low
 
-### Architecture
+#### Architecture
 
 Current architecture is perfect for most of the projects, but as we are working on a e-commerce and we are thinking on adding Event Driven Development, we could think on implement Domain Driven Development which makes a perfect combination with EDD to make the project robust and maintainable.
 
 This is considered low impact to me as current architecture could also work with this kind of project.
 
-### Documentation
+#### Documentation
 
 Currently the project is using Postman for documentate the API, instead of using, for example, the swagger module provided by nest. Swagger module will save a lot of time to developers as it will be updated with the code without making extra effort. This will make documentation easy to update.
+
+#### Unpatched vulnerabilities
+
+There are some vulnerabilities reported on eslint recently, which doesn't have been patched yet, related to certain outdated dependencies as Ajv and Minimatch. There is a [Pull Request](https://github.com/eslint/eslint/pull/20523) at this moment fixing this, so the better solution is just wait, because Ajv contains some breaking changes from the latest version to the one that is used in eslint and it's not possible to fix easily.

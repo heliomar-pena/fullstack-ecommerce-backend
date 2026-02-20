@@ -1,18 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmConfigService } from './database/typeorm/typeorm.service';
-import { ApiModule } from './api/api.module';
-import { configuration } from './config';
+import { DatabaseModule } from './database/database.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ load: [configuration], isGlobal: true }),
-    TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
-    ApiModule,
-  ],
+  imports: [ConfigModule, DatabaseModule],
   controllers: [AppController],
   providers: [AppService],
 })

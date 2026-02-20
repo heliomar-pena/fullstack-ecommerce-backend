@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-ecommerce",
+  "name": "nest-ecommerce",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -7,23 +7,27 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "clean": "rimraf ./dist",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest --forceExit --detectOpenHandles --verbose",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json --forceExit --detectOpenHandles --verbose",
-    "seed:run": "nest start --entryFile ./database/seed/seed.js",
-    "typeorm": "npm run clean && npm run build && npx typeorm -d dist/database/migration/datasource.js",
-    "migration:generate": "npm run typeorm -- migration:generate src/database/migration/history/$npm_config_name",
-    "migration:run": "npm run typeorm -- migration:run",
-    "migration:revert": "npm run typeorm migration:revert"
+    "test:e2e": "jest --config ./jest-e2e.json --runInBand",
+    "typeorm": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "typeorm:generate": "npm run typeorm -- migration:generate -d src/database/data-source.ts src/database/migrations/${npm_config_name}",
+    "typeorm:migrate": "npm run typeorm -- migration:run -d src/database/data-source.ts",
+    "typeorm:revert": "npm run typeorm -- migration:revert -d src/database/data-source.ts",
+    "typeorm:drop": "npm run typeorm -- schema:drop -d src/database/data-source.ts",
+    "typeorm:show": "npm run typeorm -- migration:show -d src/database/data-source.ts",
+    "typeorm:seeds:create": "npm run typeorm -- migration:create src/database/seeds/${npm_config_name}",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "**/*.{js,ts,json}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -52,7 +56,9 @@
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
     "jest": "^30.0.0",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",

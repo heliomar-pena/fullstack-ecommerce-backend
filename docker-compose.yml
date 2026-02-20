@@ -1,12 +1,68 @@
-version: '3.8'
 services:
-  postgres:
-    image: postgres
+  api_test:
+    extends:
+      file: common-services.yml
+      service: api
+    build:
+      context: ./
+      target: test
+    depends_on:
+      - postgres_test
     environment:
-      POSTGRES_USER: hassan
-      POSTGRES_PASSWORD: password
-    volumes:
-      - ./database-data:/var/lib/postgresql/data/
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - DATABASE_HOST=postgres_test
+      - DATABASE_PORT=5432
+    profiles:
+      - test
+    develop:
+      watch:
+        - path: ./test
+          target: /app
+          action: sync+restart
+
+  postgres_test:
+    extends:
+      file: common-services.yml
+      service: postgres_db
+    profiles:
+      - test
+    environment:
+      POSTGRES_USER: test4@b23!
+      POSTGRES_PASSWORD: test.@345
+      POSTGRES_DB: test_db
     ports:
-      - 5432:5432
+      - '5434:5432'
+
+  api:
+    extends:
+      file: common-services.yml
+      service: api
+    depends_on:
+      - postgres_db
+    profiles:
+      - api
+    build:
+      context: ./
+      target: backend-dev
+    environment:
+      - DATABASE_HOST=postgres_db
+      - DATABASE_PORT=5432
+    ports:
+      - 3000:3000
+
+  postgres_db:
+    extends:
+      file: common-services.yml
+      service: postgres_db
+    profiles:
+      - api
+    environment:
+      POSTGRES_USER: drop4@b23!
+      POSTGRES_PASSWORD: klazX.@345
+      POSTGRES_DB: app_db
+    ports:
+      - '5433:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

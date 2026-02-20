@@ -1,0 +1,21 @@
+services:
+  api:
+    develop:
+      watch:
+        - path: ./
+          action: sync
+          ignore:
+            - ./node_modules/
+            - ./package.json
+            - ./.env
+            - ./.env.test
+          target: /app
+        - path: ./package.json
+          action: rebuild
+        - path: ./.env
+          action: rebuild
+        - path: ./.env.test
+          action: rebuild
+
+  postgres_db:
+    image: postgres:17

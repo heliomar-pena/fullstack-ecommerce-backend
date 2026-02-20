@@ -28,6 +28,16 @@ This way, we'll have a repository clean of reported vulnerabilities.
 
 Environment variables are being saved inside of the `src` of the project, this is unusual and could cause errors, because they could be exposed on final bundle or end in any Docker image. Beside of that, it looks hard to overwrite the .envs defined there, as the logic for importing `envs` tries to use the environment variables from the env folder, so if we add a .env.development.local file it will not be used by the application.
 
+In fact, found in nest-cli.json that it's actually adding the .env files to the final bundle, which is potentially risky.
+
+> Old code:
+>
+> ```js
+>   "compilerOptions": {
+>    "assets": ["common/envs/*"]
+>  }
+> ```
+
 For improving environment variables, I will use the bundled config service that Nest have, and use the default paths for environment variables that is outside of the `src/` folder.
 
 #### Seeds

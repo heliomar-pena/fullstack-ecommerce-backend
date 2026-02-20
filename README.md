@@ -52,6 +52,14 @@ There are some minor typos in errors file that could been cleaned up before movi
 
 In order to improve those points, I'd recommend to create error instances instead of a general file of error codes, that way every domain could have its own errors, and when an error is thrown they will have the correct HTTP code.
 
+#### Local and CI/CD Pipeline
+
+Currently there is a leak of pipelines in the project, which could lead to inconsistencies in the code and broken tests.
+
+We have installed and configured eslint, prettier and even have some test cases, but nothing prevents me from commiting and pushing code with Test, Eslint or Prettier errors.
+
+To improve this and keep a good code quality, we could consider including husky locally for running eslint, prettier and tests on commits or push, and adding verification in pipeline. We can also add extra safety adding coverage verification.
+
 ### Low
 
 ### Architecture

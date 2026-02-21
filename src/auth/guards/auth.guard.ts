@@ -54,7 +54,10 @@ export class AuthGuard implements CanActivate {
 
       if (!user) return false;
 
-      request.user = user;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...restUser } = user;
+
+      request.user = restUser;
 
       return true;
     } catch (error) {

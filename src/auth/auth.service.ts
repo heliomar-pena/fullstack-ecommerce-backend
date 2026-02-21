@@ -1,12 +1,7 @@
-import {
-  Inject,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { type ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { RoleIds } from 'src/api/role/enum/role.enum';
-import { RoleService } from 'src/api/role/services/role.service';
+import { RoleIds } from 'src/role/enum/role.enum';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { WrongCredentials } from './errors/wrong-credentials.error';
 import { EmailInUse } from './errors/email-in-use.error';
@@ -15,13 +10,11 @@ import { JwtPayloadDto } from './dto/jwt-payload.dto';
 import { authConfig } from './auth.config';
 import bcrypt from 'bcrypt';
 import { UsersRepository } from 'src/user/user.repository';
-import { InvalidRole } from './errors/invalid-role';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userRepository: UsersRepository,
-    private readonly roleService: RoleService,
     private jwtService: JwtService,
     @Inject(authConfig.KEY)
     private auth: ConfigType<typeof authConfig>,
@@ -42,20 +35,16 @@ export class AuthService {
   async register(createUserDto: CreateUserDto) {
     const user = await this.userRepository.findByEmail(createUserDto.email);
 
-    if (!user) throw new EmailInUse();
-
-    const customerRole = await this.roleService.findById(RoleIds.Customer);
-
-    if (!customerRole) throw new InvalidRole();
+    if (user) throw new EmailInUse();
 
     const password = await bcrypt.hash(createUserDto.password, this.auth.salt);
 
     await this.userRepository.create(
       {
-        ...user,
+        ...createUserDto,
         password,
       },
-      customerRole,
+      RoleIds.Customer,
     );
 
     return {
@@ -69,7 +58,7 @@ export class AuthService {
     };
 
     const accessToken = this.jwtService.sign(payload, {
-      notBefore: new Date().getTime(),
+      notBefore: '-15s',
       subject: user.id.toString(),
       issuer: this.auth.issuer,
     });

@@ -56,11 +56,11 @@ services:
     profiles:
       - api
     environment:
-      POSTGRES_USER: drop4@b23!
-      POSTGRES_PASSWORD: klazX.@345
+      POSTGRES_USER: dropb23
+      POSTGRES_PASSWORD: 5M!i35
       POSTGRES_DB: app_db
     ports:
-      - '5433:5432'
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
 

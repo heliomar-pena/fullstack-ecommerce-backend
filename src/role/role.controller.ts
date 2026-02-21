@@ -3,12 +3,14 @@ import { RoleService } from './role.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Serialize } from 'src/shared/interceptors/serialize.interceptor';
 import { RolesDto } from './dto/roles-dto';
+import { AuthRoles } from 'src/auth/decorators/authorization.decorator';
+import { RoleIds } from './enum/role.enum';
 
 @Controller('role')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
-  // TODO: Add admin decorator
+  @AuthRoles(RoleIds.Admin)
   @Get('list')
   @ApiBearerAuth()
   @Serialize(RolesDto)

@@ -11,6 +11,8 @@ import { User } from './entities/user.entity';
 import { ReqUser } from 'src/auth/decorators/request-user.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { Serialize } from 'src/shared/interceptors/serialize.interceptor';
+import { AuthRoles } from 'src/auth/decorators/authorization.decorator';
+import { RoleIds } from 'src/role/enum/role.enum';
 
 @Controller('user')
 export class UserController {
@@ -24,7 +26,7 @@ export class UserController {
     return this.userService.findById(user.id);
   }
 
-  // TODO: Add auth decorator
+  @AuthRoles(RoleIds.Admin)
   @ApiBearerAuth()
   @Get(':id/roles/:roleId')
   async assignRole(

@@ -13,7 +13,10 @@ import { ProductInvalidAttributes } from './errors/product-invalid-attributes';
 import { ProductAttribute } from './entities/product-attribute.entity';
 import { ProductAttributeRepository } from './product-attribute.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { PRODUCT_DELETED_EVENT_KEY } from './events/product-deleted.event';
+import {
+  PRODUCT_DELETED_EVENT_KEY,
+  ProductDeletedEvent,
+} from './events/product-deleted.event';
 
 @Injectable()
 export class ProductService {
@@ -126,7 +129,10 @@ export class ProductService {
 
     if (!deletedRows || deletedRows < 1) throw new ProductNotFound();
 
-    this.eventEmitter.emit(PRODUCT_DELETED_EVENT_KEY, { id: productId });
+    this.eventEmitter.emit(PRODUCT_DELETED_EVENT_KEY, {
+      id: productId,
+      userId: merchantId,
+    } satisfies ProductDeletedEvent);
   }
 
   #validateProductAttributes(

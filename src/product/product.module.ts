@@ -21,5 +21,6 @@ import { ProductAttributeRepository } from './product-attribute.repository';
     ProductAttributeRepository,
     ProductDeletedListener,
   ],
+  exports: [ProductRepository],
 })
 export class ProductModule {}

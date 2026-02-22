@@ -12,7 +12,10 @@ export class CategoryRepository {
     private categoryRepository: Repository<Category>,
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto, attributes?: Attribute[]) {
+  async create(
+    createCategoryDto: Omit<CreateCategoryDto, 'attributes'>,
+    attributes?: Attribute[],
+  ) {
     const category = this.categoryRepository.create({
       ...createCategoryDto,
       attributes,

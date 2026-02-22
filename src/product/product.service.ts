@@ -3,7 +3,6 @@ import { CreateProductDto } from './dto/crate-product.dto';
 import { ProductRepository } from './product.repository';
 import { ProductNotFound } from './errors/product-not-found';
 import { CategoryRepository } from 'src/category/category.repository';
-import { CategoryNotFound } from 'src/category/errors/category-not-found';
 import { ProductAttributesDto } from './dto/product-attributes.dto';
 import {
   Attribute,
@@ -17,6 +16,7 @@ import {
   PRODUCT_DELETED_EVENT_KEY,
   ProductDeletedEvent,
 } from './events/product-deleted.event';
+import { ProductCategoryNotFound } from './errors/product-category-not-found';
 
 @Injectable()
 export class ProductService {
@@ -42,7 +42,7 @@ export class ProductService {
   async createProduct(data: CreateProductDto, merchantId: number) {
     const category = await this.categoryRepository.findById(data.categoryId);
 
-    if (!category) throw new CategoryNotFound();
+    if (!category) throw new ProductCategoryNotFound();
 
     const product = await this.productRepository.create(
       data,

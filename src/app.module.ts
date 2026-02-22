@@ -30,7 +30,6 @@ import { APP_PIPE } from '@nestjs/core';
     {
       provide: APP_PIPE,
       useValue: new ValidationPipe({
-        whitelist: true,
         transform: true,
       }),
     },

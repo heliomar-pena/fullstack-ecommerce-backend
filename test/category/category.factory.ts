@@ -28,12 +28,10 @@ export class CategoryFactory {
   async create(overrides: OverrideCreateCategoryDto = {}): Promise<Category> {
     const category = this.build(overrides);
 
-    const attributes = category.attributes.map((attr) => attr.id);
-
-    const id = await this.categoryRepository.create({
-      ...category,
-      attributes,
-    });
+    const id = await this.categoryRepository.create(
+      category,
+      category.attributes,
+    );
 
     category.id = id;
 

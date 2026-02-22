@@ -35,6 +35,10 @@ export class ProductRepository {
       where: {
         id: productId,
       },
+      relations: {
+        category: { attributes: true },
+        attributes: true,
+      },
     });
   }
 

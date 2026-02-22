@@ -2,9 +2,12 @@ import {
   Body,
   Controller,
   Delete,
-  /*Delete,*/ Get,
+  Get,
   Param,
+  Patch,
   Post,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { RoleIds } from '../role/enum/role.enum';
 import { CreateProductDto } from './dto/crate-product.dto';
@@ -23,6 +26,7 @@ export class ProductController {
 
   @ApiBearerAuth()
   @Get(':id')
+  @Serialize(ProductDto)
   async getProduct(@Param('id') productId: number) {
     return this.productService.getProduct(productId);
   }
@@ -46,7 +50,8 @@ export class ProductController {
 
   @ApiBearerAuth()
   @AuthRoles(RoleIds.Admin, RoleIds.Merchant)
-  @Post('update/:id/attributes')
+  @Patch(':id/attributes')
+  @UsePipes(new ValidationPipe({ whitelist: false, transform: false }))
   updateProductAttributes(
     @Param('id') productId: number,
     @Body() body: ProductAttributesDto,

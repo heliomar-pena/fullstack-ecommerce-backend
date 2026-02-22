@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import {
   USER_CREATED_EVENT_KEY,
@@ -19,6 +19,9 @@ export class UserCreatedListener {
   async handleUserCreatedEvent(data: UserCreatedEvent) {
     if (!data.roles || data.roles.length === 0) {
       const role = await this.roleRepository.findById(RoleIds.Customer);
+
+      if (!role)
+        throw new InternalServerErrorException('Customer role not found');
 
       await this.usersRepository.assignRoleToUser(data.id, role.id);
     }

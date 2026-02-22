@@ -3,7 +3,7 @@ import { CategoryRepository } from './category.repository';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoryAlreadyExists } from './errors/category-already-exists';
 import { AttributeRepository } from 'src/attribute/attribute.repository';
-import { AttributeNotFound } from 'src/attribute/errors/attribute-not-found';
+import { CategoryAttributeNotFound } from './errors/category-attribute-not-found';
 
 @Injectable()
 export class CategoryService {
@@ -28,7 +28,7 @@ export class CategoryService {
     );
 
     if (notFoundAttributes.length)
-      throw new AttributeNotFound(
+      throw new CategoryAttributeNotFound(
         `The next attributes were not found: ${notFoundAttributes.join(', ')}`,
       );
 

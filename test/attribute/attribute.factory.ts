@@ -18,7 +18,7 @@ export class AttributeFactory {
   constructor(private readonly attributeRepository: AttributeRepository) {}
 
   private randomName(prefix = 'attr') {
-    const r = Math.floor(Math.random() * 1_000_000);
+    const r = Math.floor(Math.random() * 1000000);
     return `${prefix}_${r}`;
   }
 
@@ -49,5 +49,16 @@ export class AttributeFactory {
       result.push(await this.create(overrides));
     }
     return result;
+  }
+
+  async getOrCreateByName(
+    name: string,
+    overrides: Omit<OverrideCreateAttributeDto, 'name'> = {},
+  ): Promise<Attribute> {
+    const existing = await this.attributeRepository.findByName(name);
+
+    if (existing) return existing;
+
+    return this.create({ ...overrides, name });
   }
 }

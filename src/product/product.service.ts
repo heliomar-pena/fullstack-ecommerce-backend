@@ -109,6 +109,25 @@ export class ProductService {
     await this.productRepository.upsertProductAttributes(valuesToSave);
   }
 
+  async activateProduct(productId: number, merchantId: number) {
+    const updatedRows = await this.productRepository.updateMerchantProduct(
+      productId,
+      merchantId,
+      { isActive: true },
+    );
+
+    if (!updatedRows || updatedRows < 1) throw new ProductNotFound();
+  }
+
+  async deleteProduct(productId: number, merchantId: number) {
+    const deletedRows = await this.productRepository.deleteProduct(
+      productId,
+      merchantId,
+    );
+
+    if (!deletedRows || deletedRows < 1) throw new ProductNotFound();
+  }
+
   #validateProductAttributes(
     attributes: ProductAttributesDto,
     categoryAttributes: Map<string, Attribute>,
@@ -143,24 +162,5 @@ export class ProductService {
     if (invalidAttributes) return false;
 
     return true;
-  }
-
-  async activateProduct(productId: number, merchantId: number) {
-    const updatedRows = await this.productRepository.updateMerchantProduct(
-      productId,
-      merchantId,
-      { isActive: true },
-    );
-
-    if (!updatedRows || updatedRows < 1) throw new ProductNotFound();
-  }
-
-  async deleteProduct(productId: number, merchantId: number) {
-    const deletedRows = await this.productRepository.deleteProduct(
-      productId,
-      merchantId,
-    );
-
-    if (!deletedRows || deletedRows < 1) throw new ProductNotFound();
   }
 }

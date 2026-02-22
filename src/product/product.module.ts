@@ -6,6 +6,8 @@ import { ProductRepository } from './product.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { ProductAttribute } from './entities/product-attribute.entity';
+import { ProductDeletedListener } from './listeners/product-deleted-listener/product-deleted.listener';
+import { ProductAttributeRepository } from './product-attribute.repository';
 
 @Module({
   imports: [
@@ -13,6 +15,11 @@ import { ProductAttribute } from './entities/product-attribute.entity';
     TypeOrmModule.forFeature([Product, ProductAttribute]),
   ],
   controllers: [ProductController],
-  providers: [ProductService, ProductRepository],
+  providers: [
+    ProductService,
+    ProductRepository,
+    ProductAttributeRepository,
+    ProductDeletedListener,
+  ],
 })
 export class ProductModule {}

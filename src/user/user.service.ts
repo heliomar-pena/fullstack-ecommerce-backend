@@ -41,6 +41,6 @@ export class UserService {
 
     user.roles = [...user.roles, role];
 
-    return this.usersRepository.updateUser(user);
+    return this.usersRepository.updateUser(user.id, { roles: user.roles });
   }
 }

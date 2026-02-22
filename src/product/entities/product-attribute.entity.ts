@@ -1,10 +1,13 @@
 import { IsDefined, IsNumber, IsString } from 'class-validator';
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { Attribute } from 'src/attribute/entities/attribute.entity';
@@ -38,4 +41,13 @@ export class ProductAttribute {
   @ManyToOne(() => Product, (product) => product.attributes)
   @JoinColumn({ name: 'productId' })
   product: Product;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

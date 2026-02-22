@@ -1,23 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersRepository {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
+    @InjectDataSource()
+    private readonly dataSource: DataSource,
   ) {}
 
-  async create(
-    createUserDto: CreateUserDto,
-    role: number,
-  ): Promise<User['id'] | undefined> {
+  async create(createUserDto: CreateUserDto): Promise<User['id'] | undefined> {
     const result = await this.usersRepository.insert({
       ...createUserDto,
-      roles: [{ id: role }],
     });
 
     return result.identifiers[0].id as User['id'];
@@ -38,7 +36,15 @@ export class UsersRepository {
     });
   }
 
-  async updateUser(updateUserDto: UpdateUserDto) {
-    return this.usersRepository.save(updateUserDto);
+  async assignRoleToUser(userId: number, roleId: number) {
+    await this.dataSource
+      .createQueryBuilder()
+      .relation(User, 'roles')
+      .of(userId)
+      .add(roleId);
+  }
+
+  async updateUser(id: User['id'], updateUserDto: UpdateUserDto) {
+    return this.usersRepository.update(id, updateUserDto);
   }
 }

@@ -4,14 +4,11 @@ import { Repository } from 'typeorm';
 import { CreateProductDto } from './dto/crate-product.dto';
 import { Product } from './entities/product.entity';
 import { Category } from 'src/category/entities/category.entity';
-import { ProductAttribute } from './entities/product-attribute.entity';
 
 @Injectable()
 export class ProductRepository {
   constructor(
     @InjectRepository(Product) private productRepository: Repository<Product>,
-    @InjectRepository(ProductAttribute)
-    private productAttributeRepository: Repository<ProductAttribute>,
   ) {}
 
   async create(data: CreateProductDto, category: Category, merchantId: number) {
@@ -61,18 +58,5 @@ export class ProductRepository {
     );
 
     return result.affected;
-  }
-
-  async getAllProductAttributes(productId: number) {
-    return this.productAttributeRepository.find({
-      where: { productId: productId },
-      relations: {
-        attribute: true,
-      },
-    });
-  }
-
-  async upsertProductAttributes(productAttributes: ProductAttribute[]) {
-    return this.productAttributeRepository.save(productAttributes);
   }
 }

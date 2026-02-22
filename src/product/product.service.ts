@@ -1,11 +1,5 @@
-import {
-  // ConflictException,
-  Injectable,
-  // NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/crate-product.dto';
-// import { Product } from './entities/product.entity';
-// import { validate } from 'class-validator';
 import { ProductRepository } from './product.repository';
 import { ProductNotFound } from './errors/product-not-found';
 import { CategoryRepository } from 'src/category/category.repository';
@@ -17,12 +11,17 @@ import {
 } from 'src/attribute/entities/attribute.entity';
 import { ProductInvalidAttributes } from './errors/product-invalid-attributes';
 import { ProductAttribute } from './entities/product-attribute.entity';
+import { ProductAttributeRepository } from './product-attribute.repository';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { PRODUCT_DELETED_EVENT_KEY } from './events/product-deleted.event';
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly productRepository: ProductRepository,
+    private readonly productAttributeRepository: ProductAttributeRepository,
     private readonly categoryRepository: CategoryRepository,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async getProduct(productId: number) {
@@ -79,7 +78,7 @@ export class ProductService {
       throw new ProductInvalidAttributes(categoryAttributes, attributes);
 
     const productExistingAttributes =
-      await this.productRepository.getAllProductAttributes(productId);
+      await this.productAttributeRepository.getAllProductAttributes(productId);
 
     const existingMap = new Map(
       productExistingAttributes.map((productAttribute) => [
@@ -106,7 +105,7 @@ export class ProductService {
       return newProductAttribute;
     });
 
-    await this.productRepository.upsertProductAttributes(valuesToSave);
+    await this.productAttributeRepository.upsertProductAttributes(valuesToSave);
   }
 
   async activateProduct(productId: number, merchantId: number) {
@@ -126,6 +125,8 @@ export class ProductService {
     );
 
     if (!deletedRows || deletedRows < 1) throw new ProductNotFound();
+
+    this.eventEmitter.emit(PRODUCT_DELETED_EVENT_KEY, { id: productId });
   }
 
   #validateProductAttributes(

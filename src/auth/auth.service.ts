@@ -1,7 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { type ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { RoleIds } from 'src/role/enum/role.enum';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { WrongCredentials } from './errors/wrong-credentials.error';
 import { EmailInUse } from './errors/email-in-use.error';
@@ -10,6 +13,11 @@ import { JwtPayloadDto } from './dto/jwt-payload.dto';
 import { authConfig } from './auth.config';
 import bcrypt from 'bcrypt';
 import { UsersRepository } from 'src/user/user.repository';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import {
+  USER_CREATED_EVENT_KEY,
+  UserCreatedEvent,
+} from './events/user-created.event';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +26,7 @@ export class AuthService {
     private jwtService: JwtService,
     @Inject(authConfig.KEY)
     private auth: ConfigType<typeof authConfig>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async login(email: string, password: string) {
@@ -39,13 +48,17 @@ export class AuthService {
 
     const password = await bcrypt.hash(createUserDto.password, this.auth.salt);
 
-    await this.userRepository.create(
-      {
-        ...createUserDto,
-        password,
-      },
-      RoleIds.Customer,
-    );
+    const userId = await this.userRepository.create({
+      ...createUserDto,
+      password,
+    });
+
+    if (!userId) throw new InternalServerErrorException();
+
+    this.eventEmitter.emit(USER_CREATED_EVENT_KEY, {
+      ...createUserDto,
+      id: userId,
+    } satisfies UserCreatedEvent);
 
     return {
       message: 'success',

@@ -6,10 +6,10 @@ import {
   UpdateDateColumn,
   ManyToMany,
   JoinTable,
-  // OneToMany,
+  OneToMany,
 } from 'typeorm';
-// import { Product } from './product.entity';
 import { Role } from 'src/role/entities/role.entity';
+import { Product } from 'src/product/entities/product.entity';
 
 @Entity()
 export class User {
@@ -26,8 +26,8 @@ export class User {
   @JoinTable({ name: 'user_roles' })
   roles: Role[];
 
-  //   @OneToMany(() => Product, (product) => product.merchant)
-  //   public products: Product;
+  @OneToMany(() => Product, (product) => product.merchant)
+  products: Product[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt!: Date;

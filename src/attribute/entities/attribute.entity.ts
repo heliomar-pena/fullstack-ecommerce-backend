@@ -1,6 +1,13 @@
 import { Expose } from 'class-transformer';
 import { Category } from 'src/category/entities/category.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ProductAttribute } from 'src/product/entities/product-attribute.entity';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 export enum AttributeType {
   STRING = 'string',
@@ -11,6 +18,7 @@ export enum AttributeType {
 @Entity()
 export class Attribute {
   @PrimaryGeneratedColumn()
+  @Expose()
   id: number;
 
   @Column({ unique: true })
@@ -23,6 +31,12 @@ export class Attribute {
   })
   @Expose()
   type: AttributeType;
+
+  @OneToMany(
+    () => ProductAttribute,
+    (productAttribute) => productAttribute.attribute,
+  )
+  productAttributes: ProductAttribute[];
 
   @Column({
     nullable: true,

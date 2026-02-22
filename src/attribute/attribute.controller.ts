@@ -12,7 +12,7 @@ export class AttributeController {
   constructor(private readonly attributeService: AttributeService) {}
 
   @Post()
-  @AuthRoles(RoleIds.Merchant)
+  @AuthRoles(RoleIds.Merchant, RoleIds.Admin)
   @ApiBearerAuth()
   create(@Body() createAttributeDto: CreateAttributeDto) {
     return this.attributeService.create(createAttributeDto);

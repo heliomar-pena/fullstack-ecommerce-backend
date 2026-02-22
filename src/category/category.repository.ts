@@ -27,6 +27,13 @@ export class CategoryRepository {
     return this.categoryRepository.find({ relations: { attributes: true } });
   }
 
+  findById(id: number) {
+    return this.categoryRepository.findOne({
+      where: { id },
+      relations: { attributes: true },
+    });
+  }
+
   findByName(name: string) {
     return this.categoryRepository.findOne({
       where: { name },

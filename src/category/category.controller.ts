@@ -12,7 +12,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
-  @AuthRoles(RoleIds.Merchant)
+  @AuthRoles(RoleIds.Merchant, RoleIds.Admin)
   @ApiBearerAuth()
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);

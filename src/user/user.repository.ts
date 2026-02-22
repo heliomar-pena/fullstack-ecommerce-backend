@@ -3,7 +3,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
-import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -42,9 +41,5 @@ export class UsersRepository {
       .relation(User, 'roles')
       .of(userId)
       .add(roleId);
-  }
-
-  async updateUser(id: User['id'], updateUserDto: UpdateUserDto) {
-    return this.usersRepository.update(id, updateUserDto);
   }
 }

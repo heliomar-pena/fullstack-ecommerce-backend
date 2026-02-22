@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { Repository } from 'typeorm';
-import { RoleNotFound } from './errors/role-not-found';
 
 @Injectable()
 export class RoleRepository {
@@ -16,9 +15,7 @@ export class RoleRepository {
         id: roleId,
       },
     });
-    if (!role) {
-      throw new RoleNotFound();
-    }
+
     return role;
   }
 

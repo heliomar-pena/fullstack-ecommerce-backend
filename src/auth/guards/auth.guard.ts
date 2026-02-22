@@ -52,7 +52,7 @@ export class AuthGuard implements CanActivate {
 
       const user = await this.usersRepository.findOneWithRoles(payload.id);
 
-      if (!user) return false;
+      if (!user) throw new InvalidToken();
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...restUser } = user;

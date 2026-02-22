@@ -9,7 +9,7 @@ const dataSource = new DataSource(generateDataSourceConfig(databaseConfig()));
 
 /**
  * DataSource instance with DB configuration
- * Used mostly for create migrations with typeorm CLI,
+ * Used only for create migrations with typeorm CLI,
  * not used in the final application.
  */
 export default dataSource;

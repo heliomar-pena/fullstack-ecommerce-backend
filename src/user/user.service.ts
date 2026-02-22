@@ -39,8 +39,6 @@ export class UserService {
 
     if (alreadyAssigned) return;
 
-    user.roles = [...user.roles, role];
-
-    return this.usersRepository.updateUser(user.id, { roles: user.roles });
+    return this.usersRepository.assignRoleToUser(user.id, roleId);
   }
 }

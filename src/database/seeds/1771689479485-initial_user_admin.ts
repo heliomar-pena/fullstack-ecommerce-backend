@@ -18,10 +18,18 @@ export class InitialUserAdmin1771689479485 implements MigrationInterface {
     `,
       [1, 3],
     );
+    await queryRunner.query(`
+      SELECT setval(
+        pg_get_serial_sequence('"user"', 'id'),
+        (SELECT MAX(id) FROM "user")
+      );
+    `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('DELETE FROM "user_roles" WHERE user.id = 1;');
+    await queryRunner.query(
+      'DELETE FROM "user_roles" WHERE user_roles.userId = 1;',
+    );
     await queryRunner.query('DELETE FROM "user" WHERE user.id = 1;');
   }
 }

@@ -1,6 +1,6 @@
-import { InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 
-export class InvalidRole extends InternalServerErrorException {
+export class InvalidRole extends BadRequestException {
   constructor() {
     super({
       message: 'Invalid Customer Role',

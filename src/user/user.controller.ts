@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  Post,
   UseInterceptors,
 } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
@@ -28,7 +29,7 @@ export class UserController {
 
   @AuthRoles(RoleIds.Admin)
   @ApiBearerAuth()
-  @Get(':id/roles/:roleId')
+  @Post(':id/roles/:roleId')
   async assignRole(
     @Param('id') userId: number,
     @Param('roleId') roleId: number,

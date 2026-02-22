@@ -9,6 +9,7 @@ import { AttributeModule } from './attribute/attribute.module';
 import { ProductModule } from './product/product.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { EventsModule } from './events/events.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { EventsModule } from './events/events.module';
     ConfigModule,
     DatabaseModule,
     CategoryModule,
+    UserModule,
     ProductModule,
     EventsModule,
   ],

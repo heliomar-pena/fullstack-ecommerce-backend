@@ -20,6 +20,7 @@ export class AttributeController {
 
   @Get()
   @ApiBearerAuth()
+  @AuthRoles(RoleIds.Merchant, RoleIds.Admin)
   @Serialize(AttributeDto)
   findAll() {
     return this.attributeService.getAll();

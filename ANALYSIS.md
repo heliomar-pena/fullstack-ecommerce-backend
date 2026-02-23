@@ -1,0 +1,107 @@
+# Initial analysis
+
+This is an initial diagnosis of the [original repository](https://github.com/hsn656/nestjs-ecommerce) that was made before starting coding and helped to decide which priorities to take during the refactor.
+
+The original repository contains the codebase for a microservice that works as backoffice or admin panel for a e-commerce. It contains all the features needed for creating products, users, enable products, etc.
+
+Contains code related to inventory, stock, currencies and prices that is not implemented yet. During the current analysis and refactor I'll focus on the features that are already implemented.
+
+Here are some changes that could be applied to the repository to make it more maintainable and scalable in the future, and before starting applicating Event Driven Development.
+
+I decided to categorize them from highest to lowest priority, based on how they impact in the product and in the code.
+
+## High
+
+### Routes Public by Default
+
+All routes are public by default, which could possibly cause errors in future if someone forgive to protect a route. We could reverse the logic and protect all routes by default, then specify if a route will be public, or what roles are needed to visit it.
+
+### Vulnerabilities
+
+As this project is old and has been unmaintained by a long time, it's important to highlight the vulnerabilities that has been reported during this 3 years from the last update of the project.
+
+It's common to add a bot to execute a soft `npm audit fix` automatically and avoid project to accumulate vulnerabilities with the time. However, in this case we have lot of dependencies that are out of date, so the better way to fix all the vulnerabilities could be doing an upgrade of the versions of all the dependencies.
+
+This way, we'll have a repository clean of reported vulnerabilities.
+
+### JWT Token
+
+It's not recommendable to save PII (Personally Identifiable Information) inside of JWT tokens, as can be: email, username, etc. Since this information is available for anyone with the token, giving tools to hackers to prepare its next phishing attack with the information we are giving to them.
+
+To improve this, will remove any PII information from the JWT token and keep only the User ID.
+
+Also, every time JWT Service is called we are repeating values that are already defined in the Module, we can omit those values as the default values are already defined in module.
+
+### Environment variables
+
+Environment variables are being saved inside of the `src` of the project, this is unusual and could cause errors, because they could be exposed on final bundle or end in any Docker image. Beside of that, it looks hard to overwrite the .envs defined there, as the logic for importing `envs` tries to use the environment variables from the env folder, so if we add a .env.development.local file it will not be used by the application.
+
+In fact, found in nest-cli.json that it's actually adding the .env files to the final bundle, which is potentially risky.
+
+> Old code:
+>
+> ```js
+>   "compilerOptions": {
+>    "assets": ["common/envs/*"]
+>  }
+> ```
+
+For improving environment variables, I will use the bundled config service that Nest have, and use the default paths for environment variables that is outside of the `src/` folder.
+
+### Seeds
+
+Seeds are currently using a custom logic to seed the DB, the problem with the custom code decision is that it's not possible to versioning the seeds, so probably the seeds will work only with the last migration file, making a rollback difficult.
+
+Instead, seeds must be sorted by creation date, the same that the migrations, that way every migration could have a seed adapting the data from the OLD DB structure to the new one. And must have the option to skip seeds (for production, for example).
+
+For this, we could use the same migration scripts given by typeorm for creating and running the seeds.
+
+### Adding a repository layer could mark better the difference between logic and persistence.
+
+Currently we have two layers: Controllers and Services, the Service layer contains the bussiness logic + persistence logic, that means that if we change our ORM from TypeORM, we will need to refactor all our services. Beside of that, there are some examples like in UsersService where we have a method ONLY for saving a user, which should not be responsibility of the service.
+
+Also, we can see on roles that the user domain is modified inside roles domain.
+
+## Medium
+
+### Errors
+
+The current error filters is great, it keeps a consistency response even when the request failed. Same with the success response filter. There are some caveats on the current implementation that could be improved, for example, there are some minor typos in errors file that could been cleaned up before moving to production.
+
+Beside of that, this structure of having all the errors inside a big object can be difficult to handle in the future:
+
+1. Difficult to check if there are repeated error codes
+2. Errors that are not in use anymore (for example if we remove a domain but forgot to remove the error)
+3. Errors with inconsistent code status (for example, User not found -> HTTP Status 500)
+
+In order to improve these points, I will to create error instances instead of a general file of error codes, that way every domain could have its own errors, and when an error is thrown they will have the correct HTTP code.
+
+Also, will switch the error codes from numbers to lowercase_snake_case codes which are more unique.
+
+### Local and CI/CD Pipeline
+
+Currently there is a leak of pipelines in the project, which could lead to inconsistencies in the code and broken tests.
+
+We have installed and configured eslint, prettier and even have some test cases, but nothing prevents me from commiting and pushing code with Test, Eslint or Prettier errors.
+
+To improve this and keep a good code quality, we could consider including husky locally for running eslint, prettier and tests on commits or push, and adding verification in pipeline. We can also add extra safety adding coverage verification.
+
+## Low
+
+### Architecture
+
+Current architecture is perfect for most of the projects, but as we are working on a e-commerce and we are thinking on adding Event Driven Development, we could think on implement Clean Architecture + Domain Driven Development which makes a perfect combination with Event Driven Development to make the project robust and maintainable.
+
+This is considered low impact to me as current architecture could also work with this kind of project.
+
+### Documentation
+
+Currently the project is using Postman for documentate the API, instead of using, for example, the swagger module provided by nest. Swagger module will save a lot of time to developers as it will be updated with the code without making extra effort. This will make documentation easy to update.
+
+### Unpatched vulnerabilities
+
+There are some vulnerabilities reported on eslint recently, which doesn't have been patched yet, related to certain outdated dependencies as Ajv and Minimatch. There is a [Pull Request](https://github.com/eslint/eslint/pull/20523) at this moment fixing this, so the better solution is just wait, because Ajv contains some breaking changes from the latest version to the one that is used in eslint and it's not possible to fix easily.
+
+### Implement any authentication library
+
+We could implement passport, betterauth, or any library for handling the authentication logic. These auth libraries allows scaling adding multiple login strategies, like password, gmail by using the strategy pattern which makes easy to add new authentication methods.

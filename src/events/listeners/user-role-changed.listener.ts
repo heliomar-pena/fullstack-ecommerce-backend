@@ -4,7 +4,6 @@ import {
   USER_ROLE_CHANGED_EVENT_KEY,
   UserRoleChangedEvent,
 } from '../../user/events/user-role-changed.event';
-import { PRODUCT_DELETED_COMPLETION_EVENT_KEY } from 'src/product/events/product-deleted-completion-event';
 import { EventsService } from '../events.service';
 
 @Injectable()
@@ -13,12 +12,8 @@ export class UserRoleChangedListener {
 
   @OnEvent(USER_ROLE_CHANGED_EVENT_KEY)
   handleUserRoleChangedEvent(event: UserRoleChangedEvent) {
-    this.eventsService.sendEvent(
-      event.id,
-      PRODUCT_DELETED_COMPLETION_EVENT_KEY,
-      {
-        message: `Your roles has been updated to ${(event.roles ?? []).map((role) => role.name).join(', ')}`,
-      },
-    );
+    this.eventsService.sendEvent(event.id, USER_ROLE_CHANGED_EVENT_KEY, {
+      message: `Your roles has been updated to ${(event.roles ?? []).map((role) => role.name).join(', ')}`,
+    });
   }
 }

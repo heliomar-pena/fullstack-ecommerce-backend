@@ -293,7 +293,7 @@ npm run test:e2e
 
 ## Env Vars
 
-1. DB environment variables: Fill it with the details of the postgres db, if postgres is running on Docker, then copy and paste the values from docker-compose.
+1. DB environment variables: Fill it with the details of the postgres db, if postgres is running on Docker, then copy and paste the values from docker-compose. If you have a URL instead, use DATABASE_URL (all the credentials will be ignored them.). If your postgres DB is using SSL then mark DATABASE_ENABLE_SSL_CONFIGURATION as true, if not, leave as it is.
 2. JWT_SECRET: This is the value used for encrypt and decrypt the JWT tokens. Any value can be used here, however it's good practice to use a strong password difficult to break, like a hash. There are some online tools that generates secure hash for this purpose, like [jwt secret key generator](https://jwtsecretkeygenerator.com/).
-3. Email Services: It's actually integrated with [resend](https://resend.com/), so it's possible to use it with the actual resend API to send emails. In that case, it's needed to fill `EMAIL_API_URL` with the value `https://api.resend.com`, `EMAIL_API_KEY` with the resend's API KEY and `FROM_EMAIL` with the email registered in resend (it's `onboarding@resend.dev` in the case there is not any registered email). If we want to run the APP without using the real resend integration, just fill the details with random values. (Email templates and notifications via channel email will not work properly).
-4. Notifications Providers: Just fill it with random values as they are not real APIs.
+3. CORS_ORIGIN: CORS is enabled so it is needed to add our FrontEnd's URL in this ENV to allow requests from that URL.
+4. ADMIN_DEFAULT_EMAIL and ADMIN_DEFAULT_PASSWORD: These are the credentials for the admin user created when the seeds are ran. Enable DATABASE_RUN_SEEDS, change those variables and then run migrations `npm run typeorm:migrate`.

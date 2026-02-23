@@ -5,6 +5,7 @@ import { authConfig } from 'src/auth/auth.config';
 export class InitialUserAdmin1771689479485 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const config = authConfig();
+    const email = process.env.ADMIN_DEFAULT_EMAIL ?? 'john.doe@acme.com';
     const password = bcrypt.hashSync(
       process.env.ADMIN_DEFAULT_PASSWORD ?? 'admin123',
       config.salt,
@@ -12,7 +13,7 @@ export class InitialUserAdmin1771689479485 implements MigrationInterface {
 
     await queryRunner.query(
       `INSERT INTO "user"(id, email, password) VALUES ($1, $2, $3);`,
-      [1, 'john.doe@acme.com', password],
+      [1, email, password],
     );
     await queryRunner.query(
       `

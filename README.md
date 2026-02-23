@@ -1,5 +1,8 @@
 # Nest Ecommerce
 
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/heliomar-pena/fullstack-ecommerce-backend/tree/dev.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/heliomar-pena/fullstack-ecommerce-backend/tree/dev)
+[![Coverage Status](https://coveralls.io/repos/github/heliomar-pena/fullstack-ecommerce-backend/badge.svg?branch=dev)](https://coveralls.io/github/heliomar-pena/fullstack-ecommerce-backend?branch=dev)
+
 The goal of this challenge is to evolve the current system (catalog and inventory) into an event-driven model, first resolving the structural problems, and then exposing that flow to a simple React frontend.
 
 ## Public Links

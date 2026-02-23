@@ -1,12 +1,17 @@
 # CHANGELOG: NestJS E-Commerce Refactor
 
+This file contains a summary of the main changes made from the original repo to this new repository. Think on it as a continuation of the [initial analysis](./INITIAL_ANALYSIS.md) documentation, but including the solution applied to each problem from the previous analysis.
+
 ## Summary
 
 A refactor of the original project was performed, significantly improving **security, scalability, maintainability, and overall architecture**.
-The project evolved from a modularized structure to Clean Architecture + DDD + EDD.
+The project evolved from a modularized structure to Event Driven Development.
+
+## Table of Content
 
 - [CHANGELOG: NestJS E-Commerce Refactor](#changelog-nestjs-e-commerce-refactor)
   - [Summary](#summary)
+  - [Table of Content](#table-of-content)
   - [High Priority Changes](#high-priority-changes)
     - [1. Authentication Security: Routes Protected by Default](#1-authentication-security-routes-protected-by-default)
       - [Original Problem: Routes Public by Default](#original-problem-routes-public-by-default)
@@ -181,26 +186,28 @@ Problem
 
 Solution
 
+Upgraded the system to the latest version of the libraries
+
 ```json
 {
   "dependencies": {
-    "@nestjs/common": "^11.0.1", // ✅ +2 major versions
-    "@nestjs/config": "^4.0.3", // ✅ Updated
-    "@nestjs/core": "^11.0.1", // ✅ +2 major versions
-    "@nestjs/event-emitter": "^3.0.1", // ✅ New
-    "@nestjs/jwt": "^11.0.2", // ✅ +1 major version
-    "@nestjs/swagger": "^11.2.6", // ✅ New
-    "@nestjs/typeorm": "^11.0.0", // ✅ +2 major versions
-    "typeorm": "^0.3.28", // ✅ Updated
-    "pg": "^8.18.0", // ✅ Updated
-    "bcrypt": "^6.0.0" // ✅ +1 major version
+    "@nestjs/common": "^11.0.1", // +2 major versions
+    "@nestjs/config": "^4.0.3", // Updated
+    "@nestjs/core": "^11.0.1", // +2 major versions
+    "@nestjs/event-emitter": "^3.0.1", // New
+    "@nestjs/jwt": "^11.0.2", // +1 major version
+    "@nestjs/swagger": "^11.2.6", // New
+    "@nestjs/typeorm": "^11.0.0", // +2 major versions
+    "typeorm": "^0.3.28", // Updated
+    "pg": "^8.18.0", // Updated
+    "bcrypt": "^6.0.0" // +1 major version
   },
   "devDependencies": {
-    "@nestjs/cli": "^11.0.0", // ✅ +2 major versions
-    "@types/jest": "^30.0.0", // ✅ +1 major version
-    "@types/node": "^22.10.7", // ✅ +4 major versions
-    "eslint": "^9.18.0", // ✅ +1 major version
-    "jest": "^29.7.0" // ✅ Updated
+    "@nestjs/cli": "^11.0.0", // +2 major versions
+    "@types/jest": "^30.0.0", // +1 major version
+    "@types/node": "^22.10.7", // +4 major versions
+    "eslint": "^9.18.0", // +1 major version
+    "jest": "^29.7.0" // Updated
   }
 }
 ```

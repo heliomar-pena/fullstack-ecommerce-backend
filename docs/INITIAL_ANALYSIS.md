@@ -1,6 +1,6 @@
 # Initial analysis
 
-This is an initial diagnosis of the [original repository](https://github.com/hsn656/nestjs-ecommerce) that was made before starting coding and helped to decide which priorities to take during the refactor.
+This is an initial analysis of the [original repository](https://github.com/hsn656/nestjs-ecommerce) that was made before starting coding and helped to decide which priorities to take during the refactor.
 
 The original repository contains the codebase for a microservice that works as backoffice or admin panel for a e-commerce. It contains all the features needed for creating products, users, enable products, etc.
 

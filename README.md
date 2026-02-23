@@ -18,32 +18,97 @@ For this, was taken a pre-existent project ([original project](https://github.co
   - [Public Links](#public-links)
   - [Table of Content](#table-of-content)
   - [Features](#features)
-  - [Pre-requisites](#pre-requisites)
+    - [Authentication](#authentication)
+    - [Authorization (Roles)](#authorization-roles)
+    - [Categories](#categories)
+    - [Products](#products)
+    - [Real-Time Notifications with Server-Sent Events (SSE)](#real-time-notifications-with-server-sent-events-sse)
+    - [Event-Driven Architecture](#event-driven-architecture)
+    - [Security Features](#security-features)
+  - [Technology Stack](#technology-stack)
+  - [Pre-requisites to run the project](#pre-requisites-to-run-the-project)
     - [To run it dockerized](#to-run-it-dockerized)
     - [To run it without docker](#to-run-it-without-docker)
-  - [How to run the API](#how-to-run-the-api)
-    - [Custom scripts](#custom-scripts)
-      - [Run API](#run-api)
-      - [Watch API (development mode)](#watch-api-development-mode)
-      - [Run tests](#run-tests)
-    - [With Docker](#with-docker)
-      - [API](#api)
-    - [Run DB with Docker and API with Node](#run-db-with-docker-and-api-with-node)
+  - [How to run the project](#how-to-run-the-project)
+    - [Docker](#docker)
+      - [Run Docker with the custom scripts](#run-docker-with-the-custom-scripts)
+        - [API + DB](#api--db)
+        - [Watch API + DB (development mode)](#watch-api--db-development-mode)
+        - [Run tests](#run-tests)
+      - [Run Docker without custom scripts](#run-docker-without-custom-scripts)
+        - [API](#api)
+      - [Run DB with Docker and API with Node](#run-db-with-docker-and-api-with-node)
   - [Run the migrations](#run-the-migrations)
   - [How to run the tests](#how-to-run-the-tests)
     - [Tests with Docker](#tests-with-docker)
     - [Test DB in docker, but the tests in node](#test-db-in-docker-but-the-tests-in-node)
   - [Areas to improve](#areas-to-improve)
-  - [Technologies](#technologies)
   - [Decisions made](#decisions-made)
   - [Routes](#routes)
   - [Env Vars](#env-vars)
 
 ## Features
 
+### Authentication
 
+- Authentication implemented with JWT, following good practices for secure token generation.
+- Role-Based Access Control. Current Roles: Customer, Merchant, Admin.
+- All routes protected by default (fail-secure pattern).
+- Password hashing with bcrypt configurable via .env.
+- Automatic role assignment for new users.
 
-## Pre-requisites
+### Authorization (Roles)
+
+- Admin users can assign roles to other users.
+- Merchant users can create and handle products and categories.
+- Customer users doesn't have any permissions right now.
+
+### Categories
+
+- DB-Driven schema for category attributes, which makes categories a lot more flexible while yet maintaining the benefits of having typed attributes. Support for attributes of type STRING, NUMBER and BOOLEAN
+- Create category and assign custom attributes for it.
+
+### Products
+
+- Create a product with Title + Code + Description and assign a category to it (It will inherit the category attributes).
+- Add the details of the product with runtime validation for the attributes, only defined attributes are accepted and value has to be compatible with the type defined in the attribute.
+- Publicate a product on the ecommerce.
+- Delete a product. Soft delete is supported for products and attributes.
+
+### Real-Time Notifications with Server-Sent Events (SSE)
+
+- Server-Sent Events for instant notifications
+- User-specific event streaming
+- Role change notifications
+- Product deletion confirmations
+- Automatic keep-alive for connection stability
+
+### Event-Driven Architecture
+
+- Domain events for user creation and role changes
+- Event listeners for automatic side effects
+- Cascading events for complex workflows
+- Clean separation of concerns
+- Scalable to async/distributed events (RabbitMQ, Kafka)
+
+### Security Features
+
+- PII-free JWT tokens (only user ID)
+- Bearer token authentication
+- CORS support with configurable origins
+
+## Technology Stack
+
+- Framework: NestJS 11
+- Language: TypeScript 5
+- Database: PostgreSQL 17
+- ORM: TypeORM 0.3
+- Authentication: JWT with bcrypt
+- Real-Time: Server-Sent Events (SSE)
+- Testing: Jest + Supertest
+- Documentation: Swagger/OpenAPI 3.0
+
+## Pre-requisites to run the project
 
 ### To run it dockerized
 
@@ -57,13 +122,21 @@ For this, was taken a pre-existent project ([original project](https://github.co
 1. Postgres 17
 2. Node 24
 
-## How to run the API
+## How to run the project
 
-### Custom scripts
+You can run the project by using Docker, by running node and postgres on your computer or you could also run Postgres on Docker and the project on your computer (better for development).
+
+Choose the one that you like more.
+
+### Docker
+
+#### Run Docker with the custom scripts
 
 There are some custom scripts that can be used instead of writing the docker command manually.
 
-#### Run API
+If you want to see how to run docker without these scripts, [click here to skip this section](#run-docker-without-custom-scripts)
+
+##### API + DB
 
 Starts the DB and the API:
 
@@ -71,7 +144,7 @@ Starts the DB and the API:
 ./scripts/up_dev.sh
 ```
 
-#### Watch API (development mode)
+##### Watch API + DB (development mode)
 
 Starts the DB and the API in Watch mode:
 
@@ -85,17 +158,19 @@ When docker run in mode watch, logs are hidden, it's possible to access them run
 ./scripts/logs_dev.sh
 ```
 
-#### Run tests
+##### Run tests
+
+This one runs the postgres database for testing and run the tests.
 
 ```sh
 ./scripts/up_test.sh
 ```
 
-### With Docker
+#### Run Docker without custom scripts
 
 As alternative, can be run using Docker compose directly, instead of the custom scripts.
 
-#### API
+##### API
 
 ```bash
 docker compose --profile api up
@@ -114,7 +189,7 @@ docker compose --profile api watch
 > docker compose --profile api logs -f
 > ```
 
-### Run DB with Docker and API with Node
+#### Run DB with Docker and API with Node
 
 It's also possible to start only the Database in Docker, and the application in NodeJS.
 
@@ -146,7 +221,7 @@ Remember to fill the DB credentials in the .envs.
 
 ## Run the migrations
 
-Running the DB (in postgres or locally) its the first step, the second step is filling the DB with the needed structure, for that, we use migrations which contains the tables and columns we need on the application.
+Running the DB (in postgres or locally) is the first step, the second step is filling the DB with the needed structure, for that, we use migrations which contains the tables and columns we need on the application.
 
 Also, if wanted, there are also seeds that loads small pre-defined data to start working on. To run the seeds, it's needed to add the `DATABASE_RUN_SEEDS=true` variable in the .env file.
 
@@ -155,6 +230,8 @@ To run the migrations, fill the .env with the data to connect to the database, t
 ```bash
 npm run typeorm:migrate
 ```
+
+Once the migrations are done, you can go and start using the app. If you ran the seeds with the migrations, then there will be a Admin user by default
 
 ## How to run the tests
 
@@ -177,11 +254,14 @@ docker compose --profile test up
 
 ### Test DB in docker, but the tests in node
 
-```bash
-docker compose up postgres_test
-```
+1. Run the DB for testing
 
-Then run the tests:
+   ```bash
+   docker compose up postgres_test
+   ```
+
+2. Go to the .env.example file, and change the port for the one that is defined in docker-compose.yml
+3. Run the tests:
 
 ```bash
 npm run test:e2e
@@ -192,17 +272,11 @@ npm run test:e2e
 
 ## Areas to improve
 
-- Role is currently in a gray-area between hardcoded in the code, and dynamic in the DB, it could scale to use roles directly from DB, without hardcode code, by adding a new database to link permissions to roles and make our system work in base of permissions, that way admins could create roles without touching code.
+- Role is currently in a gray-area between hardcoded in the code, and dynamic in the DB, it could scale to use roles directly from DB, without hardcode code, by adding a new table to link permissions to roles and make our system work in base of permissions, that way we could define the permissions needed for every feature, but Admins are who give a shape to our roles, creating new roles that mix different permissions for every need without touching code.
 - User <-> Roles relation is a many to many relation, instead it could be added a table in the middle to handle some metadata like "Who assigned the role to the user", "When the user became admin", etc.
 - Attributes does not supports enum, lists, options, multiple values, and does not distinguish between required, not required, or have default values. This is something that we could scale to improve the flexibility of the attributes a lot.
 - Events does not have a way to recover from fail. We could have added a more robust event systems with retry, logs, and better error handling.
-
-## Technologies
-
-- Nest
-- Node
-- TypeORM
-- PostgresSQL
+- There could be a lot of events that could be integrated in the project in the future. Right now, we have not too much features integrated so it is actually difficult to see where to add events when our code is already pretty simple with simple features. I would like to integrate events like "When a product is published, send email campaigns to the users", and things like that.
 
 ## Decisions made
 

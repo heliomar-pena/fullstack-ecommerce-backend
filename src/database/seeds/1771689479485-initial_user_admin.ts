@@ -1,14 +1,18 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
+import bcrypt from 'bcrypt';
+import { authConfig } from 'src/auth/auth.config';
 
 export class InitialUserAdmin1771689479485 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
+    const config = authConfig();
+    const password = bcrypt.hashSync(
+      process.env.ADMIN_DEFAULT_PASSWORD ?? 'admin123',
+      config.salt,
+    );
+
     await queryRunner.query(
       `INSERT INTO "user"(id, email, password) VALUES ($1, $2, $3);`,
-      [
-        1,
-        'john.doe@acme.com',
-        '$2b$10$WF33ts5YGuvR9ViNHmG1lO/O.zv/WXjpRBgRx/DXIJGMp5Gv79WTm',
-      ],
+      [1, 'john.doe@acme.com', password],
     );
     await queryRunner.query(
       `

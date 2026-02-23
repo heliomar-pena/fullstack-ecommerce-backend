@@ -1,11 +1,4 @@
-import {
-  ClassSerializerInterceptor,
-  Controller,
-  Get,
-  Param,
-  Post,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
@@ -14,17 +7,25 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { Serialize } from 'src/shared/interceptors/serialize.interceptor';
 import { AuthRoles } from 'src/auth/decorators/authorization.decorator';
 import { RoleIds } from 'src/role/enum/role.enum';
+import { ListAllUsersDto } from './dto/list-all-users.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiBearerAuth()
-  @Serialize(UserDto)
   @Get('profile')
-  @UseInterceptors(ClassSerializerInterceptor)
-  profile(@ReqUser() user: User): Promise<UserDto> {
+  @Serialize(UserDto)
+  profile(@ReqUser() user: User) {
     return this.userService.findById(user.id);
+  }
+
+  @ApiBearerAuth()
+  @Serialize(ListAllUsersDto)
+  @AuthRoles(RoleIds.Admin)
+  @Get('list')
+  list() {
+    return this.userService.findAll();
   }
 
   @AuthRoles(RoleIds.Admin)

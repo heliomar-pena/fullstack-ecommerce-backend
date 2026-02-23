@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import { User } from 'src/user/entities/user.entity';
 import {
   Entity,
@@ -13,6 +14,7 @@ export class Role {
   @PrimaryColumn()
   id!: number;
 
+  @Expose()
   @Column({ type: 'varchar', length: 120, unique: true })
   name: string;
 

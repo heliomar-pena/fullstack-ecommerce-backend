@@ -25,27 +25,34 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @ApiBearerAuth()
-  @Get(':id')
-  @Serialize(ProductDto)
-  async getProduct(@Param('id') productId: number) {
-    return this.productService.getProduct(productId);
-  }
-
-  @ApiBearerAuth()
   @Get()
   @Serialize(ProductDto)
   async getAllProducts() {
     return this.productService.getAllProducts();
   }
 
+  @Get('/me')
+  @ApiBearerAuth()
+  @Serialize(ProductDto)
+  async getMyProducts(@ReqUser() user: RequestUserDto) {
+    return this.productService.getMyProducts(user.id);
+  }
+
   @ApiBearerAuth()
   @AuthRoles(RoleIds.Admin, RoleIds.Merchant)
-  @Post('create')
+  @Post()
   async createProduct(
     @Body() body: CreateProductDto,
     @ReqUser() user: RequestUserDto,
   ) {
     return this.productService.createProduct(body, user.id);
+  }
+
+  @ApiBearerAuth()
+  @Get(':id')
+  @Serialize(ProductDto)
+  async getProduct(@Param('id') productId: number) {
+    return this.productService.getProduct(productId);
   }
 
   @ApiBearerAuth()

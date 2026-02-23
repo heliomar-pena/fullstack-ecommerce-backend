@@ -21,7 +21,16 @@ export class UsersRepository {
   }
 
   findOne(id: User['id']) {
-    return this.usersRepository.findOne({ where: { id: id } });
+    return this.usersRepository.findOne({
+      where: { id: id },
+      relations: { roles: true },
+    });
+  }
+
+  findAll(): Promise<User[]> {
+    return this.usersRepository.find({
+      relations: { roles: true },
+    });
   }
 
   findByEmail(email: User['email']) {

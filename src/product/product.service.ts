@@ -39,6 +39,10 @@ export class ProductService {
     return this.productRepository.findAll();
   }
 
+  async getMyProducts(merchantId: number) {
+    return this.productRepository.findAllByMerchant(merchantId);
+  }
+
   async createProduct(data: CreateProductDto, merchantId: number) {
     const category = await this.categoryRepository.findById(data.categoryId);
 

@@ -5,12 +5,18 @@ import { UsersRepository } from './user.repository';
 import { Role } from 'src/role/entities/role.entity';
 import { RoleRepository } from 'src/role/role.repository';
 import { InvalidRole } from 'src/auth/errors/invalid-role';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import {
+  USER_ROLE_CHANGED_EVENT_KEY,
+  UserRoleChangedEvent,
+} from './events/user-role-changed.event';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly roleRepository: RoleRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async findById(id: number): Promise<User> {
@@ -20,6 +26,10 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async findAll(): Promise<User[]> {
+    return this.usersRepository.findAll();
   }
 
   async assignUserRole(id: User['id'], roleId: Role['id']) {
@@ -39,6 +49,12 @@ export class UserService {
 
     if (alreadyAssigned) return;
 
-    return this.usersRepository.assignRoleToUser(user.id, roleId);
+    await this.usersRepository.assignRoleToUser(user.id, roleId);
+
+    this.eventEmitter.emit(USER_ROLE_CHANGED_EVENT_KEY, {
+      id: user.id,
+      email: user.email,
+      roles: [...user.roles, role],
+    } satisfies UserRoleChangedEvent);
   }
 }

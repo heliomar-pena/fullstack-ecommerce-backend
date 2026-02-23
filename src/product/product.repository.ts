@@ -30,6 +30,18 @@ export class ProductRepository {
     });
   }
 
+  async findAllByMerchant(merchantId: number) {
+    return this.productRepository.find({
+      where: {
+        merchantId,
+      },
+      relations: {
+        category: { attributes: true },
+        attributes: true,
+      },
+    });
+  }
+
   async findOne(productId: number) {
     return this.productRepository.findOne({
       where: {

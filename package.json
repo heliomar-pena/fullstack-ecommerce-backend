@@ -20,8 +20,7 @@
     "typeorm:revert": "npm run typeorm -- migration:revert -d src/database/data-source.ts",
     "typeorm:drop": "npm run typeorm -- schema:drop -d src/database/data-source.ts",
     "typeorm:show": "npm run typeorm -- migration:show -d src/database/data-source.ts",
-    "typeorm:seeds:create": "npm run typeorm -- migration:create src/database/seeds/${npm_config_name}",
-    "prepare": "husky"
+    "typeorm:seeds:create": "npm run typeorm -- migration:create src/database/seeds/${npm_config_name}"
   },
   "lint-staged": {
     "**/*.{js,ts,json}": [

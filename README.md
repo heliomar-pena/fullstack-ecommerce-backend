@@ -7,6 +7,8 @@ This project is an ecommerce application built using Nest.js and Postgres. The f
 
 For this, was taken a pre-existent project ([original project](https://github.com/hsn656/nestjs-ecommerce)) and performed a refactor on the infrastructure (how migrations, seeds, environment variables, authentication, and error handling works), folder structure (moved from layered modularized architecture to clean architecture), and on the database (changed the way the attributes were working for categories for a more flexible solution that allows creating new categories without touching the code).
 
+[Go to FrontEnd's repository](https://github.com/heliomar-pena/fullstack-ecommerce-frontend)
+
 ## Public Links
 
 - [FrontEnd](https://fullstack-ecommerce-frontend-2cad384b2bd8.herokuapp.com/auth/login)

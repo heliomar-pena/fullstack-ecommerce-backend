@@ -34,6 +34,7 @@ For this, was taken a pre-existent project ([original project](https://github.co
     - [Real-Time Notifications with Server-Sent Events (SSE)](#real-time-notifications-with-server-sent-events-sse)
     - [Event-Driven Architecture](#event-driven-architecture)
     - [Security Features](#security-features)
+    - [Developer Experience](#developer-experience)
   - [Technology Stack](#technology-stack)
   - [Pre-requisites to run the project](#pre-requisites-to-run-the-project)
     - [To run it dockerized](#to-run-it-dockerized)
@@ -105,6 +106,12 @@ For this, was taken a pre-existent project ([original project](https://github.co
 - PII-free JWT tokens (only user ID)
 - Bearer token authentication
 - CORS support with configurable origins
+
+### Developer Experience
+
+- Added husky for pre-commits quality-checks and automatically fixing eslint and prettier errors when possible.
+- Integrated tests and build in CI/CD for remote check in circle-ci.
+- Added commitlint to have consistent messages on the git history.
 
 ## Technology Stack
 
@@ -293,6 +300,7 @@ npm run test:e2e
 - Docker: To make it portable.
 - Jest/Testing/E2E: Jest is the most used testing framework. E2E testing was done because in this case testing all features together is more convenient that testing every single part of the application, allowing us to test how the strategies integrates with services properly depending of the payload passed to the controller.
 - Removed hardcoded attributes from code to make categories more flexibles, now users can create a category and define the attributes for that category in specific, then the product will inherit the attributes of the category and user can fill them.
+- Preferred SSE over WebSockets for real-time event as we needed a simple a single-way channel to send notifications from the backend to the UI without allowing the opposite (sending notifications from UI to BackEnd).
 - Changed the way the seeds were created to have historical seeds that are consistent with the migrations.
 - Migrated the whole application to new version of libraries to fix most of the vulnerabilities present in the code.
 

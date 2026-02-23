@@ -3,7 +3,7 @@
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/heliomar-pena/fullstack-ecommerce-backend/tree/dev.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/heliomar-pena/fullstack-ecommerce-backend/tree/dev)
 [![Coverage Status](https://coveralls.io/repos/github/heliomar-pena/fullstack-ecommerce-backend/badge.svg?branch=dev)](https://coveralls.io/github/heliomar-pena/fullstack-ecommerce-backend?branch=dev)
 
-This project is an ecommerce application built using Nest.js and Postgres. The focus is on evolving from a system with a feature-based architecture to a backend using Clean Architecture, Domain Driven Development and Event Driven Development, to prepare it for production and better scalability.
+This project is an ecommerce application built using Nest.js and Postgres. The focus is on evolving from a existing system with a feature-based architecture to a backend using Clean Architecture, Domain Driven Development and Event Driven Development, and prepare it for production and better scalability.
 
 For this, was taken a pre-existent project ([original project](https://github.com/hsn656/nestjs-ecommerce)) and performed a refactor on the infrastructure (how migrations, seeds, environment variables, authentication, and error handling works), folder structure (moved from layered modularized architecture to clean architecture), and on the database (changed the way the attributes were working for categories for a more flexible solution that allows creating new categories without touching the code).
 
@@ -12,10 +12,17 @@ For this, was taken a pre-existent project ([original project](https://github.co
 - [FrontEnd](https://fullstack-ecommerce-frontend-2cad384b2bd8.herokuapp.com/auth/login)
 - [Documentation (Swagger)](https://full-stack-ecommerce-9b782554ef40.herokuapp.com/api#/)
 
+### Documentation
+
+- [Initial Analysis](./docs/INITIAL_ANALYSIS.md)
+- [Changelog / Refactor Details](./docs/KEY_CHANGES.md)
+- [Event-Driven Design](./docs/EVENT_DRIVEN_DESIGN.md)
+
 ## Table of Content
 
 - [FullStack Ecommerce - Server](#fullstack-ecommerce---server)
   - [Public Links](#public-links)
+    - [Documentation](#documentation)
   - [Table of Content](#table-of-content)
   - [Features](#features)
     - [Authentication](#authentication)
@@ -283,7 +290,7 @@ npm run test:e2e
 - Clean Architecture: To be able to handle further changes in the future in a proper way.
 - Docker: To make it portable.
 - Jest/Testing/E2E: Jest is the most used testing framework. E2E testing was done because in this case testing all features together is more convenient that testing every single part of the application, allowing us to test how the strategies integrates with services properly depending of the payload passed to the controller.
-- Removed hardcoded attributes from code to make them more flexibles, now users can create a category and define the attributes for that category in specific, then the product will inherit the attributes of the category and user can fill them.
+- Removed hardcoded attributes from code to make categories more flexibles, now users can create a category and define the attributes for that category in specific, then the product will inherit the attributes of the category and user can fill them.
 - Changed the way the seeds were created to have historical seeds that are consistent with the migrations.
 - Migrated the whole application to new version of libraries to fix most of the vulnerabilities present in the code.
 

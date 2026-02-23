@@ -1,0 +1,44 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@7.2.1
+  coveralls: coveralls/coveralls@2.2.5
+
+jobs:
+  build_and_test:
+    docker:
+      - image: cimg/node:24.13.0
+      - image: cimg/postgres:17.0
+        environment:
+          POSTGRES_USER: test4@b23!
+          POSTGRES_PASSWORD: test.@345
+          POSTGRES_DB: test_db
+
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Run E2E tests
+          command: npm run test:e2e -- --coverage
+      
+      - coveralls/upload
+
+      - run:
+          name: Build app
+          command: npm run build
+
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .
+
+workflows:
+  build_test_deploy:
+    jobs:
+      - build_and_test

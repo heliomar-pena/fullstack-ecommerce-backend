@@ -49,13 +49,6 @@ export class ProductController {
   }
 
   @ApiBearerAuth()
-  @Get(':id')
-  @Serialize(ProductDto)
-  async getProduct(@Param('id') productId: number) {
-    return this.productService.getProduct(productId);
-  }
-
-  @ApiBearerAuth()
   @AuthRoles(RoleIds.Admin, RoleIds.Merchant)
   @Patch(':id/attributes')
   @UsePipes(new ValidationPipe({ whitelist: false, transform: false }))
@@ -74,6 +67,13 @@ export class ProductController {
     @ReqUser() user: RequestUserDto,
   ) {
     return this.productService.activateProduct(productId, user.id);
+  }
+
+  @ApiBearerAuth()
+  @Get(':id')
+  @Serialize(ProductDto)
+  async getProduct(@Param('id') productId: number) {
+    return this.productService.getProduct(productId);
   }
 
   @ApiBearerAuth()

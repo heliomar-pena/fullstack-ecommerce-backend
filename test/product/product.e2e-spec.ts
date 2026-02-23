@@ -138,7 +138,7 @@ describe('ProductController (e2e)', () => {
           });
 
           response = await request(app.getHttpServer())
-            .post('/product/create')
+            .post('/product')
             .set(authHelper.authHeader(accessToken))
             .send({
               categoryId: product.categoryId,
@@ -150,7 +150,7 @@ describe('ProductController (e2e)', () => {
           product.id = (response.body as { id: number }).id;
         });
 
-        it('POST: /product/create should return 201 Created', () => {
+        it('POST: /product should return 201 Created', () => {
           expect(response.status).toBe(201);
         });
 
@@ -306,9 +306,9 @@ describe('ProductController (e2e)', () => {
         });
       });
 
-      it('POST: /product/create should return 400 Bad Request if category does not exist', async () => {
+      it('POST: /product should return 400 Bad Request if category does not exist', async () => {
         const response = await request(app.getHttpServer())
-          .post('/product/create')
+          .post('/product')
           .set(authHelper.authHeader(accessToken))
           .send({
             categoryId: product.categoryId,

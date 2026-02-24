@@ -57,7 +57,6 @@ The project evolved from a modularized structure to Event Driven Development.
       - [Problems of original solution (schema defined in code, DB flexible)](#problems-of-original-solution-schema-defined-in-code-db-flexible)
       - [Implemented Solution -\> Adding a table for specificating attributes for category on DB](#implemented-solution---adding-a-table-for-specificating-attributes-for-category-on-db)
       - [Benefits of new DB Driven attributes](#benefits-of-new-db-driven-attributes)
-  - [Change Summary](#change-summary)
 
 ---
 
@@ -709,21 +708,3 @@ await this.productAttributeRepository.upsertProductAttributes(valuesToSave);
 - No schema changes required for new attributes
 - Strong validation guarantees consistency
 - Categories control the product attribute “schema”
-
----
-
-## Change Summary
-
-| #   | Change                    | Priority | Status | Impact                                    |
-| --- | ------------------------- | -------- | ------ | ----------------------------------------- |
-| 1   | Secure Routes by Default  | High     | ✅     | +Security                                 |
-| 2   | JWT without PII           | High     | ✅     | +Security                                 |
-| 3   | Dependency Upgrades       | High     | ✅     | 0 reported vulnerabilities                |
-| 4   | Config Management         | High     | ✅     | +Security -Errors configuring environment |
-| 5   | Versioned Seeds           | High     | ✅     | Safe rollbacks                            |
-| 6   | Repository Pattern        | High     | ✅     | +Maintainability                          |
-| 7   | Domain Errors             | Medium   | ✅     | +Error handling                           |
-| 8   | Testing Infra             | Medium   | ✅     | +coverage                                 |
-| 9   | Swagger Docs              | Medium   | ✅     | Docs always synced                        |
-| 10  | Event-Driven Architecture | Low      | ✅     | +Scalability                              |
-| 11  | Dynamic Attributes        | Low      | ✅     | +Flexibility                              |
